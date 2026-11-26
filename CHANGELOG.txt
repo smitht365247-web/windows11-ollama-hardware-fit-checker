@@ -1,0 +1,9 @@
+v1.2 (2026-11-25)
+- Fixed the launcher so quoted custom output paths and paths ending in a
+  trailing backslash are sanitized correctly (no parenthesized % expansion).
+- Added MIT LICENSE.txt (Copyright 2026 Taylor Smith).
+
+v1.1
+- Hardened first public release: RAM, 64-bit VRAM, disk free, Ollama
+  API reachability and model fit tier report.
+- 2026-11-25 (r2): Fixed default %~dp0 trailing backslash quote-escaping when run from folders containing spaces.
