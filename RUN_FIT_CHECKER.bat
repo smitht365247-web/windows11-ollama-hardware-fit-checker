@@ -1,11 +1,11 @@
 @echo off
 setlocal DisableDelayedExpansion
-title Windows 11 Ollama Hardware & Model Fit Checker (v1.2)
+title Windows 11 Ollama Hardware & Model Fit Checker (v1.3)
 
 :START
 cls
 echo ====================================================================
-echo   WINDOWS 11 OLLAMA HARDWARE ^& MODEL FIT CHECKER (v1.2)
+echo   WINDOWS 11 OLLAMA HARDWARE ^& MODEL FIT CHECKER (v1.3)
 echo   (Portable Windows Toolkit ^| Read-Only ^| No Python or Docker)
 echo ====================================================================
 echo.

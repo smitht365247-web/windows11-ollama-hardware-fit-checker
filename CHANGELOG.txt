@@ -1,3 +1,9 @@
+v1.3 (2026-11-25)
+- Added RAM-ceiling & GGUF quantization tier estimator (Q8_0, Q6_K, Q5_K_M,
+  Q4_K_M, Q3_K_M, Q2_K) for 7B, 14B, and 32B/35B models based on available
+  system RAM and dedicated/integrated GPU memory.
+- Enforced -LiteralPath on registry subkey lookups.
+
 v1.2 (2026-11-25)
 - Fixed the launcher so quoted custom output paths and paths ending in a
   trailing backslash are sanitized correctly (no parenthesized % expansion).
