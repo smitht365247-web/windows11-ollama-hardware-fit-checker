@@ -113,7 +113,9 @@ if ($gpuSummary.Count -eq 0) {
                 }
             }
         }
-        if ($qwGB -gt 0) {
+        $dacType = if ($ad.PSObject.Properties['AdapterDACType'] -and $null -ne $ad.AdapterDACType) { [string]$ad.AdapterDACType } else { "" }
+        $isIntegrated = ($qwGB -lt 1.0) -or ($dacType -ieq "Internal")
+        if (-not $isIntegrated) {
             if ($qwGB -gt $maxVramGB) { $maxVramGB = $qwGB }
             $gpuSummary += "$name ($qwGB GB dedicated VRAM via Registry)"
         } else {
@@ -140,14 +142,24 @@ $loadedModels = @()
 try {
     $verResp = Invoke-RestMethod -Uri "http://127.0.0.1:11434/api/version" -TimeoutSec 2 -ErrorAction Stop
     $apiReachable = $true
-    if ($verResp.PSObject.Properties['version']) { $ollamaVersion = $verResp.version }
-    $psResp = Invoke-RestMethod -Uri "http://127.0.0.1:11434/api/ps" -TimeoutSec 2 -ErrorAction Stop
-    if ($psResp.PSObject.Properties['models'] -and $psResp.models) {
-        foreach ($m in $psResp.models) {
-            $loadedModels += "$($m.name) (size_vram: $([math]::Round($m.size_vram / 1GB, 2)) GB)"
-        }
-    }
+    if ($verResp -and $verResp.PSObject.Properties['version']) { $ollamaVersion = $verResp.version }
 } catch { $apiReachable = $false }
+
+if ($apiReachable) {
+    try {
+        $psResp = Invoke-RestMethod -Uri "http://127.0.0.1:11434/api/ps" -TimeoutSec 2 -ErrorAction Stop
+        if ($psResp -and $psResp.PSObject.Properties['models'] -and $psResp.models) {
+            foreach ($m in $psResp.models) {
+                $mName = if ($m.PSObject.Properties['name']) { [string]$m.name } else { "unknown" }
+                if ($m.PSObject.Properties['size_vram'] -and $null -ne $m.size_vram) {
+                    $loadedModels += "$mName (size_vram: $([math]::Round(([double]$m.size_vram) / 1GB, 2)) GB)"
+                } else {
+                    $loadedModels += "$mName (size_vram: N/A)"
+                }
+            }
+        }
+    } catch { }
+}
 
 $safeRamCeilingGB = [math]::Round([math]::Max(0.0, ($totalRamGB - 4.0)), 2)
 $effectiveHybridBudgetGB = [math]::Round(($safeRamCeilingGB + $maxVramGB), 2)
