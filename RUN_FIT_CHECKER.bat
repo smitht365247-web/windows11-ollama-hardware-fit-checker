@@ -1,6 +1,7 @@
 @echo off
 setlocal DisableDelayedExpansion
-title Windows 11 Ollama Hardware & Model Fit Checker (v1.3)
+cd /d "%~dp0"
+title Windows 11 Ollama Hardware ^& Model Fit Checker (v1.3)
 
 :START
 cls
